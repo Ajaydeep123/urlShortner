@@ -27,7 +27,7 @@ app.use(express.urlencoded({extended:false})); // it means that the application 
 //     });
 // } );
 
-app.use("/url",urlRoute);
+app.use("/url",urlRoute); //http://localhost:8001/url
 app.use("/",staticRoute);
 
 
