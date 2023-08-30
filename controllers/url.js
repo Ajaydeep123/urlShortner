@@ -16,7 +16,12 @@ async function handleGenerateNewShortURL(req,res){
         visitHistory:[]
     });
  
-    return res.json({id: shortID});   //here we are sending json reponse
+    // return res.json({id: shortID});   //here we are sending json reponse
+    //but we want to render home page as response
+
+    return res.render('home', {
+        id:shortID
+    });
 }
 
 async function handleRedirectUrl(req,res){
