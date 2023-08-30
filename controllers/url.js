@@ -7,18 +7,45 @@ async function handleGenerateNewShortURL(req,res){
     if(!body.url){
         return res.status(400).json({error:'url is required'});
     }
-    const shortId = shortid();
-    
+    const shortID = shortid();
+    console.log(shortID);
 //creating short id in db
     await URL.create({
-        shortId: shortId,
+        shortId: shortID,
         redirectURL: body.url,
         visitHistory:[]
     });
-
+ 
     return res.json({id: shortID});
+}
+
+async function handleRedirectUrl(req,res){
+        const shortId = req.params.shortId;
+    const entry=    await URL.findOneAndUpdate({
+        shortId
+    },{
+        $push:{
+            visitHistory:{
+                timestamp:Date.now(),
+            }
+        }
+    })
+    res.redirect(entry.redirectURL);
+}
+
+async function handleGetAnalytics(req, res){
+
+    const shortId = req.params.shortId;
+    const result = await URL.findOne({shortId});
+
+    return res.json({
+        totalClicks: result.visitHistory.length,
+        analytics:result.visitHistory,
+    });
 }
 
 module.exports = {
     handleGenerateNewShortURL,
+    handleRedirectUrl,
+    handleGetAnalytics,
 };
